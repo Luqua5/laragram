@@ -3,7 +3,8 @@
 
 @section('content')
   <div class="login">
-    <form action='index.php?action=loginT' method='POST'>
+    <form action='{{url("/loginT")}}' method='POST'>
+      @csrf
       <input type='mail' name='mail' placeholder='e-mail'>
       <input type='password' name='pwd' placeholder='Mot de passe'>
 
@@ -13,6 +14,6 @@
   </div>
 
   <div class="register">
-    <span>Vous n'avez pas de compte ? <a href='index.php?action=register'>Inscrivez-vous</a></span>
+    <span>Vous n'avez pas de compte ? <a href='{{url("register")}}'>Inscrivez-vous</a></span>
   </div>
 @endsection('content')
