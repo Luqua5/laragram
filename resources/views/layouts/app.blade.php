@@ -18,7 +18,6 @@
 </head>
 
 <body>
-  @include('flash-message')
   @section('topMenu')
     @include('layouts.topMenu')
   @show
