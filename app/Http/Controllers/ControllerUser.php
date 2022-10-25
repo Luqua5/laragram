@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ControllerUser extends Controller
 {
@@ -16,28 +17,29 @@ class ControllerUser extends Controller
 
     function loginT(request $request){ 
         $validated = $request->validate([
-            'mail' => ['required', 'unique:user'],
-            'pwd' => ['required']
-        ]);
+            'email' => ['required', 'exists:user'],
+            'mdp' => ['required'],
+        ],
+        [
+            'email.exists' => "cet email n'existe pas",
+        ],
+        );
+        $rememberme = $request->has('rememberme') ? true : false; 
+        $user = DB::table('user')->where('email', $validated['email'])->first();
+        if($validated['email'] == $user->email && sha1($validated['mdp']) == $user->mdp){
+            $request->session()->put('user', $validated['email']);
+            if($rememberme){
+                $token = $request->input('_token');
+                $token = $request->cookie('remember');
+                DB::table('user')
+                ->where('id', $user->id)
+                ->update(['remember' => $token]);
+            }
+            return view(view: 'actualites');
+        }else {
+            return back()->with('error','Mauvais mot de passe');
 
-        var_dump($validated);
-
-        /* if (null == ($request->input("mail")) || null == ($request->input("pwd"))) {
-            return view(view: 'login');
+            
         }
-        else {
-            $user = DB::select("select * from user where email=? and mdp=sha1(?)", [$request->input("email"), $request->input("pwd")]);
-            if($user === false){
-                return view(view: 'login');
-            }
-            else{
-                $request->session()->put('id', $user['id']);
-                $request->session()->put('login', $user['login']);
-                if(null !== ($request->input('rememberme'))){
-                    
-                }
-            }
-        }  */
-        return;
     }
 }

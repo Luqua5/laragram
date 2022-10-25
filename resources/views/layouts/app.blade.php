@@ -18,18 +18,18 @@
 </head>
 
 <body>
-
-@section('topMenu')
-  @include('layouts.topMenu')
-@show
+  @include('flash-message')
+  @section('topMenu')
+    @include('layouts.topMenu')
+  @show
 
   <section class="content">
     @yield('content')
   </section>
 
-@section('bottomMenu')
-  @include('layouts.bottomMenu')
-@show
+  @section('bottomMenu')
+    @include('layouts.bottomMenu')
+  @show
 
 </body>
 </html>
