@@ -16,9 +16,7 @@ use App\Http\Controllers\ControllerSocial;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ControllerUser::class, 'index']);
 
 Route::get('/login', [ControllerUser::class, 'login']);
 

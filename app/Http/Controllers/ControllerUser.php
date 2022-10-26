@@ -4,9 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 
 class ControllerUser extends Controller
 {
+    function index(request $request){
+        if (session()->has('user')) {
+            return view(view: 'actualites');
+        }else 
+        if($request->hasCookie('remember')){
+            $remember = Cookie::get('remember');
+            $user = DB::table('user')->where('remember', $remember)->first();
+            session()->put('user', $user->login);
+            return view(view: 'actualites');
+        }
+        else{
+            return view(view: 'login');
+        }
+        
+    }
+
     function login(){
         return view(view: 'login');
     }
@@ -26,10 +43,10 @@ class ControllerUser extends Controller
         $rememberme = $request->has('rememberme') ? true : false; 
         $user = DB::table('user')->where('email', $validated['email'])->first();
         if($validated['email'] == $user->email && sha1($validated['mdp']) == $user->mdp){
-            $request->session()->put('user', $validated['login']);
+            session()->put('user', $user->login);
             if($rememberme){
                 $token = $request->input('_token');
-                $token = $request->cookie('remember');
+                Cookie::queue('remember', $token, 120);
                 DB::table('user')
                 ->where('id', $user->id)
                 ->update(['remember' => $token]);
