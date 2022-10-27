@@ -10,13 +10,13 @@ class ControllerUser extends Controller
 {
     function index(request $request){
         if (session()->has('user')) {
-            return view(view: 'actualites');
-        }else 
-        if($request->hasCookie('remember')){
+            return redirect('/actualites');
+        }
+        else if($request->hasCookie('remember')){
             $remember = Cookie::get('remember');
             $user = DB::table('user')->where('remember', $remember)->first();
             session()->put('user', $user->login);
-            return view(view: 'actualites');
+            return redirect('/actualites');
         }
         else{
             return view(view: 'login');
@@ -24,13 +24,23 @@ class ControllerUser extends Controller
         
     }
 
+
     function login(){
         return view(view: 'login');
     }
 
+
     function register(){
         return view(view: 'register');
     }
+
+
+    function logout(){
+        session()->forget('user');
+        Cookie::forget('remember');
+        return view('login');
+    }
+
 
     function loginT(request $request){ 
         $validated = $request->validate([
@@ -43,7 +53,7 @@ class ControllerUser extends Controller
         $rememberme = $request->has('rememberme') ? true : false; 
         $user = DB::table('user')->where('email', $validated['email'])->first();
         if($validated['email'] == $user->email && sha1($validated['mdp']) == $user->mdp){
-            session()->put('user', $user->login);
+            session()->put('user', $user);
             if($rememberme){
                 $token = $request->input('_token');
                 Cookie::queue('remember', $token, 120);
@@ -51,11 +61,12 @@ class ControllerUser extends Controller
                 ->where('id', $user->id)
                 ->update(['remember' => $token]);
             }
-            return view(view: 'actualites');
+            return redirect('/actualites');
         }else {
             return back()->with('error','Mauvais mot de passe');
         }
     }
+
 
     function registerT(request $request){
         $validated = $request->validate([
@@ -71,7 +82,6 @@ class ControllerUser extends Controller
 
         DB::table('user')
                 ->insert(['email' => $validated['email'], 'mdp' => sha1($validated['mdp']), 'login' => $validated['login']]);
-        $request->session()->put('user', $validated['login']);
-        return view(view: 'actualites');
+        return view(view: 'login');
     }
 }

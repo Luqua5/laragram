@@ -30,6 +30,8 @@ Route::get('/search', [ControllerPost::class, 'search']);
 
 Route::get('/subscription', [ControllerSocial::class, 'subscription']);
 
+Route::get('/logout', [ControllerUser::class, 'logout']);
+
 
 Route::post('/publishT', [ControllerPost::class, 'publishT']);
 
@@ -40,5 +42,3 @@ Route::post('/delFriend', [ControllerSocial::class, 'delFriend']);
 Route::post('/loginT', [ControllerUser::class, 'loginT']);
 
 Route::post('/registerT', [ControllerUser::class, 'registerT']);
-
-Route::post('/logout', [ControllerUser::class, 'logout']);
