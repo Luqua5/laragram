@@ -6,7 +6,8 @@
 
 @section('topMenu')
 <nav class="top">
-<form class=search action='index.php' method='GET'>
+<form class=search action='{{url("/search")}}' method='GET'>
+  @csrf
   <input type='hidden' name='action' value="search">
   <input type='text' name='v' placeholder='Votre recherche' value="{{$v}}">
   <button type='submit' name='search' value='rechercher'><i class='bx bx-search'></i></button>
@@ -20,7 +21,7 @@
       <div>
         <span class="auteur">{{$a['login']}}</span>
       </div>
-      <a href="index.php?action=articles&id={{$a['idAuteur']}}"><img src="{{$a['img_url']}}" /></a>
+      <a href="index.php?action=articles&id={{$a['idAuteur']}}"><img src="/storage{{$a['img_url']}}" /></a>
       <h3>{{$a['titre']}}</h3>
       <div class="desc">
         <span class="tags">{{$a['tags']}}</span>

@@ -7,7 +7,20 @@ use Illuminate\Support\Facades\DB;
 
 class ControllerPost extends Controller
 {
-    function search(){
+    function search(request $request){
+        $v = '';
+        $articles = [];
+        if(isset($request->v)){
+            $articles = DB::table('user')
+            ->select('article.*', 'user.login')        
+            ->join('article', 'user.id', '=', 'article.idAuteur')
+            ->where('tags', 'like','%' . $request->v . '%', )
+            ->get();
+            $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray(); 
+            $v = $request->v;
+        }
+        return view('search', ['articles' => $articles], ['v' => $v]);
+
         return view(view: 'search');
     }
 
