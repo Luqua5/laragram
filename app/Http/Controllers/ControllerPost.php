@@ -15,6 +15,16 @@ class ControllerPost extends Controller
         return view(view: 'publish');
     }
 
+    function articles(){
+        $user = session('user');
+        $articles = DB::table('article') 
+        ->join('user', 'user.id', '=', 'article.idAuteur')
+        ->where('idAuteur', $user->id)
+        ->get();
+        $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray(); 
+        return view('articles', ['articles' => $articles]);
+    }
+
     function publishT(request $request){
         $user = session('user');
         $validated = $request->validate([
@@ -30,12 +40,12 @@ class ControllerPost extends Controller
 
         $path = $validated['img']->storeAs(
             'upload',
-            '/' . $user->id . '_' . time() . "." . $validated['img']->getClientOriginalExtension(),
+            $user->id . '_' . time() . "." . $validated['img']->getClientOriginalExtension(),
             'public'
         );
 
         DB::table('article')
-        ->insert(['titre' => $validated['titre'], 'img_url' => $path, 'idAuteur' => $user->id, 'tags' => $validated['tags'] ]);
+        ->insert(['titre' => $validated['titre'], 'img_url' => '/' . $path, 'idAuteur' => $user->id, 'tags' => $validated['tags'] ]);
         
         return redirect('/actualites');
     }

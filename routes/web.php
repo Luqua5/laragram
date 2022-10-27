@@ -32,6 +32,9 @@ Route::get('/subscription', [ControllerSocial::class, 'subscription']);
 
 Route::get('/logout', [ControllerUser::class, 'logout']);
 
+Route::get('/articles', [ControllerPost::class, 'articles']);
+
+
 
 Route::post('/publishT', [ControllerPost::class, 'publishT']);
 

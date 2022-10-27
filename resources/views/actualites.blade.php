@@ -9,7 +9,7 @@
   <section class="actu">
   @forelse($articles as $a)
       <a href="index.php?action=articles&id={{$a['idAuteur']}}">
-        <img src="{{$a['img_url']}}" />
+        <img src="/storage{{$a['img_url']}}" />
         <span>{{$a['login']}}</span>
       </a>
   @empty
