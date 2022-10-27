@@ -15,6 +15,31 @@ class ControllerPost extends Controller
         return view(view: 'publish');
     }
 
+    function publishT(request $request){
+        $user = session('user');
+        $validated = $request->validate([
+            'titre' => ['required'],
+            'img' => ['required', 'mimes:jpg,jpeg,png,gif'],
+            'tags' => ['required']
+        ],
+        [
+            'titre.required' => 'Veuillez donner un titre à votre post',
+            'img.required' => 'Veuillez charger une image à votre post',
+            'tags.required' => 'Veuillez mettre au moins un tag à votre post'
+        ]);
+
+        $path = $validated['img']->storeAs(
+            'upload',
+            '/' . $user->id . '_' . time() . "." . $validated['img']->getClientOriginalExtension(),
+            'public'
+        );
+
+        DB::table('article')
+        ->insert(['titre' => $validated['titre'], 'img_url' => $path, 'idAuteur' => $user->id, 'tags' => $validated['tags'] ]);
+        
+        return redirect('/actualites');
+    }
+
     function actualites(){
         $user = session('user');
         
