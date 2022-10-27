@@ -14,30 +14,19 @@ class ControllerPost extends Controller
             $articles = DB::table('user')
             ->select('article.*', 'user.login')        
             ->join('article', 'user.id', '=', 'article.idAuteur')
-            ->where('tags', 'like','%' . $request->v . '%', )
+            ->where('tags', 'like','%' . $request->v . '%' )
             ->get();
             $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray(); 
             $v = $request->v;
         }
         return view('search', ['articles' => $articles], ['v' => $v]);
-
-        return view(view: 'search');
     }
 
     function publish(){
         return view(view: 'publish');
     }
 
-    function articles(){
-        $user = session('user');
-        $articles = DB::table('article') 
-        ->join('user', 'user.id', '=', 'article.idAuteur')
-        ->where('idAuteur', $user->id)
-        ->get();
-        $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray(); 
-        return view('articles', ['articles' => $articles]);
-    }
-
+    
     function publishT(request $request){
         $user = session('user');
         $validated = $request->validate([
@@ -50,19 +39,29 @@ class ControllerPost extends Controller
             'img.required' => 'Veuillez charger une image à votre post',
             'tags.required' => 'Veuillez mettre au moins un tag à votre post'
         ]);
-
+        
         $path = $validated['img']->storeAs(
             'upload',
             $user->id . '_' . time() . "." . $validated['img']->getClientOriginalExtension(),
             'public'
         );
-
+        
         DB::table('article')
         ->insert(['titre' => $validated['titre'], 'img_url' => '/' . $path, 'idAuteur' => $user->id, 'tags' => $validated['tags'] ]);
         
         return redirect('/actualites');
     }
 
+    function articles(){
+        $user = session('user');
+        $articles = DB::table('article') 
+        ->join('user', 'user.id', '=', 'article.idAuteur')
+        ->where('idAuteur', $user->id)
+        ->get();
+        $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray(); 
+        return view('articles', ['articles' => $articles]);
+    }
+    
     function actualites(){
         $user = session('user');
         

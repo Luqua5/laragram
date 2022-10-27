@@ -8,7 +8,8 @@
 
 @section('topMenu')
 <nav class="top">
-<form class=search action='index.php' method='GET'>
+<form class=search action='{{url("/subscription")}}' method='GET'>
+  @csrf
   <input type='hidden' name='action' value="subscription">
   <input type='text' name='v' placeholder='Rechercher un compte' value="{{$v}}">
   <button type='submit' name='search' value='rechercher'><i class='bx bx-search'></i></button>
@@ -25,7 +26,7 @@
     @foreach($searchUsers as $user)
       <div class=user>
           <span>
-          <a href="index.php?action=articles&id={{$user['id']}}">{{ $user['login']}}</a>
+          <a href="#">{{ $user['login']}}</a>
           @isset($user['dateAbonnement'])
             depuis le {{date('j F, Y', strtotime($user['dateAbonnement']))}}
           @endisset
