@@ -21,7 +21,7 @@
       <div>
         <span class="auteur">{{$a['login']}}</span>
       </div>
-      <a href="index.php?action=articles&id={{$a['idAuteur']}}"><img src="/storage{{$a['img_url']}}" /></a>
+      <a href="{{route('articles', ['id' => $a['id']])}}"><img src="/storage{{$a['img_url']}}" /></a>
       <h3>{{$a['titre']}}</h3>
       <div class="desc">
         <span class="tags">{{$a['tags']}}</span>

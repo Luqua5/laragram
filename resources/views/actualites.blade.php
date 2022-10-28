@@ -8,7 +8,7 @@
 @section('content')
   <section class="actu">
   @forelse($articles as $a)
-      <a href="index.php?action=articles&id={{$a['idAuteur']}}">
+      <a href="{{route('articles', ['id' => $a['id']])}}">
         <img src="/storage{{$a['img_url']}}" />
         <span>{{$a['login']}}</span>
       </a>

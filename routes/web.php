@@ -22,18 +22,21 @@ Route::get('/login', [ControllerUser::class, 'login']);
 
 Route::get('/register', [ControllerUser::class, 'register']);
 
+Route::get('/logout', [ControllerUser::class, 'logout']);
+
 Route::get('/actualites', [ControllerPost::class, 'actualites']);
 
 Route::get('/publish', [ControllerPost::class, 'publish']);
  
 Route::get('/search', [ControllerPost::class, 'search']);
 
+Route::get('/articles/{id?}', [ControllerPost::class, 'articles']) -> where('id','[0-9]+') ->name('articles');;
+
 Route::get('/subscription', [ControllerSocial::class, 'subscription']);
 
-Route::get('/logout', [ControllerUser::class, 'logout']);
+Route::get('/add/{id}', [ControllerSocial::class, 'add']) -> where('id','[0-9]+') ->name('add');
 
-Route::get('/articles', [ControllerPost::class, 'articles']);
-
+Route::get('/delete/{id}', [ControllerSocial::class, 'delete']) -> where('id','[0-9]+')->name('delete');
 
 
 Route::post('/publishT', [ControllerPost::class, 'publishT']);

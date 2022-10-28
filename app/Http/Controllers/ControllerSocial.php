@@ -11,13 +11,31 @@ class ControllerSocial extends Controller
         $user = session('user');
         $v = '';
         $searchUsers = [];
-        $friendUsers = DB::table('friend') -> join('user', 'user.id', '=', 'friend.idAbonne') -> where('idAbonne', $user -> id) -> get();
-        $friendUsers = collect($friendUsers)->map(function($x){ return (array) $x; })->toArray(); 
+        $friendUsers = DB::table('friend') -> join('user', 'user.id', '=', 'friend.idAmi') -> where('idAbonne', $user -> id) -> get();
         if(isset($request->v)){
             $v = $request->v;
-            $searchUsers = DB::table('friend') -> join('user', 'user.id', '=', 'friend.idAbonne') -> where('login', 'like','%' . $v . '%') -> get();
-            $searchUsers = collect($searchUsers)->map(function($x){ return (array) $x; })->toArray(); 
+            $searchUsers = DB::table('user')
+            -> select('user.login', 'user.id', 'friend.idAbonne')
+            -> leftjoin('friend', 'user.id', '=', 'friend.idAbonne') 
+            -> where('user.login', 'like','%' . $v . '%') 
+            -> where('user.id', '<>', $user->id)
+            -> get();
         }
         return view('subscription', compact('v', 'friendUsers', 'searchUsers'));
+    }
+
+    function add($id){
+        $user = session('user');
+        DB::table('friend') -> insert([
+            'idAbonne' => $user->id,
+            'idAmi' => $id
+        ]);
+        return redirect('/subscription');
+    }
+
+    function delete($id){
+        $user = session('user');
+        DB::table('friend')->where('idAbonne', $user->id) ->where('idAmi', $id )->delete();
+        return redirect('/subscription');
     }
 }

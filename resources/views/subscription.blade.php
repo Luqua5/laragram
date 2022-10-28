@@ -26,15 +26,15 @@
     @foreach($searchUsers as $user)
       <div class=user>
           <span>
-          <a href="#">{{ $user['login']}}</a>
-          @isset($user['dateAbonnement'])
-            depuis le {{date('j F, Y', strtotime($user['dateAbonnement']))}}
+          <a href="#">{{ $user->login}}</a>
+          @isset($user->dateAbonnement)
+            depuis le {{date('j F, Y', strtotime($user->dateAbonnement))}}
           @endisset
           </span>
-          @if(isset($user['idAmi']))
-            <a class="subscribe" href="index.php?action=delFriend&id={{$user['id']}}">se désabonner</a>
+          @if(isset($user->idAmi))
+            <a class="subscribe" href="{{route('delete', ['id' => $user->id])}}">se désabonner</a>
           @else
-            <a class="subscribe" href="index.php?action=addFriend&id={{$user['id']}}">s'abonner</a>
+            <a class="subscribe" href="{{route('add', ['id' => $user->id])}}">s'abonner</a>
           @endif
 
       </div>
@@ -46,12 +46,12 @@
     @foreach($friendUsers as $user)
     <div class=user>
         <span>
-        <a href="index.php?action=articles&id={{$user['id']}}">{{ $user['login']}}</a>
-        @isset($user['dateAbonnement'])
-          depuis le {{date('j F, Y', strtotime($user['dateAbonnement']))}}
+        <a href="index.php?action=articles&id={{$user->id}}">{{ $user->login}}</a>
+        @isset($user->dateAbonnement)
+          depuis le {{date('j F, Y', strtotime($user->dateAbonnement))}}
         @endisset
         </span>
-          <a class="subscribe" href="index.php?action=delFriend&id={{$user['id']}}">se désabonner</a>
+          <a class="subscribe" href="{{route('delete', ['id' => $user->id])}}">se désabonner</a>
       </div>
     @endforeach
     </section>

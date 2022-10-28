@@ -12,7 +12,7 @@ class ControllerPost extends Controller
         $articles = [];
         if(isset($request->v)){
             $articles = DB::table('user')
-            ->select('article.*', 'user.login')        
+            ->select('article.*', 'user.login', 'user.id')        
             ->join('article', 'user.id', '=', 'article.idAuteur')
             ->where('tags', 'like','%' . $request->v . '%' )
             ->get();
@@ -52,13 +52,20 @@ class ControllerPost extends Controller
         return redirect('/actualites');
     }
 
-    function articles(){
-        $user = session('user');
-        $articles = DB::table('article') 
-        ->join('user', 'user.id', '=', 'article.idAuteur')
-        ->where('idAuteur', $user->id)
-        ->get();
-        $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray(); 
+    function articles($id = null){
+        if(is_null($id)){
+            $articles = DB::table('article') 
+            ->join('user', 'user.id', '=', 'article.idAuteur')
+            ->where('idAuteur', session('user')->id)
+            ->get();
+            $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray();
+        }else {
+            $articles = DB::table('article') 
+            ->join('user', 'user.id', '=', 'article.idAuteur')
+            ->where('idAuteur', $id)
+            ->get();
+            $articles = collect($articles)->map(function($x){ return (array) $x; })->toArray();
+        }
         return view('articles', ['articles' => $articles]);
     }
     
@@ -66,7 +73,7 @@ class ControllerPost extends Controller
         $user = session('user');
         
         $articles = DB::table('user')
-        ->select('article.*', 'user.login')        
+        ->select('article.*', 'user.login', 'user.id')        
         ->join('article', 'user.id', '=', 'article.idAuteur')
         ->whereIn('idAuteur', function($query) use ($user){
             $query->select('idAmi')->from('friend')->where('idAbonne', $user->id)->get();})
