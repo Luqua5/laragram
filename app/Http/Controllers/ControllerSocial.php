@@ -19,6 +19,7 @@ class ControllerSocial extends Controller
             -> leftjoin('friend', 'user.id', '=', 'friend.idAbonne') 
             -> where('user.login', 'like','%' . $v . '%') 
             -> where('user.id', '<>', $user->id)
+            -> distinct()
             -> get();
         }
         return view('subscription', compact('v', 'friendUsers', 'searchUsers'));

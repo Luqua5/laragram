@@ -12,7 +12,7 @@ class ControllerPost extends Controller
         $articles = [];
         if(isset($request->v)){
             $articles = DB::table('user')
-            ->select('article.*', 'user.login', 'user.id')        
+            ->select('article.*', 'user.login', 'user.id')
             ->join('article', 'user.id', '=', 'article.idAuteur')
             ->where('tags', 'like','%' . $request->v . '%' )
             ->get();
