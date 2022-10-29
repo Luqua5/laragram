@@ -5,6 +5,15 @@
 @endsection
 
 @section('content')
+  @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  @endif
   <div class="publish">
   <h3>Une inspiration, une humeur ? </h3>
   <span class="callToAction">Partagez...</span>
