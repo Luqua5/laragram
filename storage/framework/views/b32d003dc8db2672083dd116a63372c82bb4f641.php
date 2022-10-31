@@ -14,7 +14,7 @@
 
 <body>
   <section class="title">
-    <h1>Instagram <span>par MMI Création</span></h1>
+    <img src="images/laragram.png" alt="logo de Laragram">
   </section>
   <section class="content">
     <?php echo $__env->yieldContent('content'); ?>

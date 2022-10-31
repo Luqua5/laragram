@@ -34,12 +34,13 @@ nav.top {
   align-items: center;
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
   background-color: white;
+  justify-content: space-between;
 }
 
-.top h1{
-  flex-grow: 1;
-  font-size: 3rem;
-  font-family: 'Dancing Script', cursive;
+.top img {
+  height: 35px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .top .bxs-paper-plane {
